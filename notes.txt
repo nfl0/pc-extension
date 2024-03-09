@@ -1,0 +1,74 @@
+***a tiny computer inside your computer***
+
+a tiny machine that has a cli and a "gui". user can write notes and save files. set recurring alarms..etc
+
+-instruction set:
+	- HALT - console.log("Execution halted.");
+	- MOV [destination_address], source_register - usage: ```memory.write(100, "MOV 1, 0"); // Move the value of variable A into register R1```
+	- STORE source_register, [destination_address] - usage: ```memory.write(101, "STORE 0, 1"); // Move the value of register R1 into variable A```
+	- ADD - usage: ```memory.write(102, "ADD 3, 1, 2"); // Add the values in registers R1 and R2 and store the result in register R3```
+
+	- loadValFromFile
+	- formatNum
+	- objTraverserFinder
+	- fetchUrl
+	- updateDisplayMem - gets badge, tile and backgroundColor, and copies them into the display memory addresses 55,56,57 consecutively
+	- setAlarm
+	- getAlarm
+	- setAlarmWithURL - gets alarm_name, timeInMinutes
+
+gpu specification:
+the gpu fetches the value of the badge, title and backgroundColor from the memory. the gpu has a frequency of 1 second, meaning the gpu will try get the values from the memory and if changed will diplay the new values.
+
+
+--------
+
+			loader.exe
+allocate space in the memory
+write the variables into the memory.data
+write the instructions into the memory.code
+
+--------
+			bitcoin_price.exe:
+0- load 5 variables into 5 (free) addresses in the data
+1- setAlarmWithURL( memory.read(data, 0), memory.read(data,1), memory.read(data, 2), memory.read(data,3), memory.read(data,4) )
+2- fetchUrl( memory.read(data, 2) )
+3- objTraverserFinder( memory.read(data,3) ,memory.read(data,4)) -> reg[1]
+4- formatNum (reg[1]) -> (reg[1])
+5- copy (reg[1]) -> memory.set(55)
+
+
+
+
+function loadProgramAndVariables(memory, program, variables) {
+    program.forEach((instruction, index) => {
+        memory.write("code", index, instruction);
+    });
+
+    variables.forEach((value, index) => {
+        memory.write("data", index, value);
+    });
+}
+
+const memory = new Memory();
+
+const program = [
+    "ALLOC,data,3",
+    "MOV,1,0",
+    "MOV,2,1",
+    "ADD,3,1,2",
+    "STORE,3,2",
+    "HALT"
+];
+
+const variables = [10, 20];
+
+loadProgramAndVariables(memory, program, variables);
+
+const cpu = new CPU(memory);
+
+cpu.run();
+
+console.log("Memory segments after execution:");
+console.log(memory.segments);
+

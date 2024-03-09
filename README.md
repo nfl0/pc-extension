@@ -1,0 +1,1 @@
+The repository houses a Chrome extension codebase allowing users to simulate computer architecture and programming concepts in-browser, featuring memory management, CPU operations, and file storage functionalities.
